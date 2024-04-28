@@ -7,7 +7,19 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const mongoose = require('mongoose')
+
 var app = express();
+
+//connect to database primer (mongoose)
+mongoose.set('strictQuery','false')
+
+const mongoDB_url = 'mongodb+srv://katsmamal:gz4RQ1BuKXhLGTfZ@cluster0.bho9vjk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+main().catch((err) => console.log(err));
+
+async function main() {
+  await mongoose.connect(mongoDB_url);
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
