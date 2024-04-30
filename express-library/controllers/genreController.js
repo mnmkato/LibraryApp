@@ -5,16 +5,18 @@ const asyncHandler = require("express-async-handler");
 // Display list of all Genre.
 exports.genre_list = asyncHandler(async (req, res, next) => {
   const allGenres = await Genre.find().sort({ name: 1 }).exec();
-  let uniqueGenres = Array.from(new Set(allGenres.map(genre => genre.name)))
-  .map(genre_name => {
-      return allGenres.find(genre => genre.name === genre_name);
+  
+  const uniqueGenresMap = new Map();
+  allGenres.forEach(genre => {
+      uniqueGenresMap.set(genre.name, genre);
   });
-
+  const uniqueGenres = Array.from(uniqueGenresMap.values());
+ 
   res.render("genre_list", {
     title: "Genre List",
     genre_list: uniqueGenres,
   });
-  res.send("NOT IMPLEMENTED: Genre list");
+  
 });
 
 // Display detail page for a specific Genre.
@@ -24,13 +26,14 @@ exports.genre_detail = asyncHandler(async (req, res, next) => {
     Genre.findById(req.params.id).exec(),
     Book.find({ genre: req.params.id }, "title summary").exec(),
   ]);
+  console.log(req.params.id)
   if (genre === null) {
     // No results.
     const err = new Error("Genre not found");
     err.status = 404;
     return next(err);
   }
-
+  
   res.render("genre_detail", {
     title: "Genre Detail",
     genre: genre,

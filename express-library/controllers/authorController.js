@@ -9,6 +9,7 @@ exports.author_list = asyncHandler(async (req, res, next) => {
     title: "Author List",
     author_list: allAuthors,
   });
+  console.log(allAuthors)
 });
 
 // Display detail page for a specific Author.
